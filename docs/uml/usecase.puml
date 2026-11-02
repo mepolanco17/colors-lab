@@ -1,0 +1,20 @@
+@startuml
+left to right direction
+actor "User" as U
+rectangle "COLORS Web Application" {
+  usecase "Log In" as UC1
+  usecase "Search Colors" as UC2
+  usecase "Add Color" as UC3
+  usecase "Log Out" as UC4
+  usecase "Verify Credentials" as UC5
+}
+U --> UC1
+U --> UC2
+U --> UC3
+U --> UC4
+UC1 ..> UC5 : <<include>>
+note right of UC2
+  Requires an active login
+  (userId stored in cookie)
+end note
+@enduml
