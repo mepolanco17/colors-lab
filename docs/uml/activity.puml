@@ -1,0 +1,32 @@
+@startuml
+title COLORS - Login, Add Color, Search Color, and Log Out Flow
+start
+:User opens index.html;
+:User enters username and password and clicks "Do It";
+:doLogin() sends {login, password} to Login.php;
+:Login.php queries Users WHERE Login=? AND Password=?;
+if (Matching user found?) then (yes)
+  :Server returns id, firstName, lastName;
+  :saveCookie() stores user for 20 minutes;
+  :Browser redirects to color.html;
+  :readCookie() confirms userId;
+  :User chooses an action;
+  switch (Action?)
+  case (Add Color)
+    :addColor() sends {color, userId} to AddColor.php;
+    :AddColor.php inserts a row into Colors;
+    :Page shows "Color has been added";
+  case (Search Color)
+    :searchColor() sends {search, userId} to SearchColors.php;
+    :SearchColors.php selects Colors WHERE Name LIKE ? AND UserID=?;
+    :Page lists the matching colors;
+  case (Log Out)
+    :doLogout() clears the cookie;
+    :Browser redirects to index.html;
+  endswitch
+else (no)
+  :Server returns id = 0;
+  :Page shows "User/Password combination incorrect";
+endif
+stop
+@enduml
