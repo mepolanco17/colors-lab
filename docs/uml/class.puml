@@ -1,0 +1,67 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+package "Front End (public/)" {
+  class "code.js" as CodeJS <<script>> {
+    - urlBase : String
+    - extension : String
+    - userId : int
+    - firstName : String
+    - lastName : String
+    + doLogin()
+    + saveCookie()
+    + readCookie()
+    + doLogout()
+    + addColor()
+    + searchColor()
+  }
+  class "md5.js" as MD5JS <<library>> {
+    + md5(string) : String
+  }
+  class "index.html" as IndexPage <<page>>
+  class "color.html" as ColorPage <<page>>
+}
+
+package "API (api/)" {
+  class "Login.php" as LoginAPI <<endpoint>> {
+    + getRequestInfo()
+    + returnWithInfo()
+    + returnWithError()
+  }
+  class "AddColor.php" as AddAPI <<endpoint>> {
+    + getRequestInfo()
+    + returnWithError()
+  }
+  class "SearchColors.php" as SearchAPI <<endpoint>> {
+    + getRequestInfo()
+    + returnWithInfo()
+    + returnWithError()
+  }
+}
+
+package "Database (MySQL)" {
+  class Users {
+    + ID : INT <<PK>>
+    + FirstName : VARCHAR(50)
+    + LastName : VARCHAR(50)
+    + Login : VARCHAR(50)
+    + Password : VARCHAR(50)
+  }
+  class Colors {
+    + ID : INT <<PK>>
+    + Name : VARCHAR(50)
+    + UserID : INT <<FK>>
+  }
+}
+
+IndexPage ..> CodeJS : loads
+IndexPage ..> MD5JS : loads
+ColorPage ..> CodeJS : loads
+CodeJS ..> LoginAPI : POST JSON
+CodeJS ..> AddAPI : POST JSON
+CodeJS ..> SearchAPI : POST JSON
+LoginAPI ..> Users : reads
+AddAPI ..> Colors : inserts
+SearchAPI ..> Colors : reads
+Users "1" -- "0..*" Colors : owns
+@enduml
