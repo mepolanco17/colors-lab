@@ -12,5 +12,10 @@ module.exports = [
       sourceType: "script",
       globals: { ...globals.browser },
     },
+    rules: {
+      // Functions in code.js are called from onclick attributes in the HTML,
+      // so ESLint cannot see them being used. Only check local variables.
+      "no-unused-vars": ["error", { vars: "local" }],
+    },
   },
 ];
