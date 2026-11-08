@@ -1,0 +1,34 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install lint tools
+        run: npm ci
+
+      - name: Lint HTML
+        run: npm run lint:html
+
+      # "if: ${{ !cancelled() }}" keeps going even if the step above failed,
+      # so one run reports the HTML, CSS, and JS problems all at once.
+      - name: Lint CSS
+        if: ${{ !cancelled() }}
+        run: npm run lint:css
+
+      - name: Lint JavaScript
+        if: ${{ !cancelled() }}
+        run: npm run lint:js
