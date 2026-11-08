@@ -3,3 +3,4 @@
 Thumbs.db
 config.php
 .env
+node_modules/
